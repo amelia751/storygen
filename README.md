@@ -23,7 +23,9 @@ Service name is the URL. Do not rename or delete it.
 Same shape as PatchAPI (`https://<service>-<project-number>.us-central1.run.app`).
 The `*.a.run.app` alias also answers; prefer the stable link.
 
-Redeploy with the **development** key, not the viewer key:
+Pushes to `main` deploy through GitHub Actions as the **development** key
+(repo secret `GCP_SA_KEY`). Manual redeploy uses the same key, not the
+viewer key:
 
 ```bash
 ./deploy.sh
