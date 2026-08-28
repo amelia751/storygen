@@ -1,5 +1,5 @@
 export const MODEL = "gemini-2.0-flash";
-export const IMAGE_MODEL = "imagen-4.0-generate-001";
+export const IMAGE_MODEL = "gemini-3.1-flash-image";
 
 const GENERATE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
