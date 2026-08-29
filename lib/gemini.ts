@@ -1,20 +1,17 @@
-export const MODEL = "gemini-3.5-flash";
-export const IMAGE_MODEL = "gemini-3.1-flash-image-preview";
+export const MODEL = "gemini-2.0-flash";
+export const IMAGE_MODEL = "gemini-3.1-flash-image";
 
 const GENERATE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 type GeminiResponse = {
   candidates?: Array<{
-    content?: {
-      parts?: Array<{
-        text?: string;
-        inlineData?: {
-          mimeType?: string;
-          data?: string;
-        };
-      }>;
-    };
+    content?: { parts?: Array<{ text?: string }> };
   }>;
+  error?: { message?: string };
+};
+
+type ImagenResponse = {
+  predictions?: Array<{ bytesBase64Encoded?: string }>;
   error?: { message?: string };
 };
 
@@ -59,39 +56,29 @@ export async function generateTitle(story: string, apiKey: string): Promise<stri
 
 export async function generateCover(story: string, apiKey: string): Promise<string> {
   const response = await fetch(
-    `${GENERATE_URL}/${IMAGE_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    `${GENERATE_URL}/${IMAGE_MODEL}:predict?key=${encodeURIComponent(apiKey)}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
+        instances: [
           {
-            parts: [
-              {
-                text: `${story} in the style of modern animated films. Characters should look cute, but not too childish`,
-              },
-            ],
+            prompt: `${story} in the style of modern animated films. Characters should look cute, but not too childish`,
           },
         ],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"],
-        },
+        parameters: { sampleCount: 1 },
       }),
     },
   );
 
-  const payload = (await response.json()) as GeminiResponse;
+  const payload = (await response.json()) as ImagenResponse;
   if (!response.ok) {
-    throw new Error(payload.error?.message ?? `Gemini request failed (${response.status})`);
+    throw new Error(payload.error?.message ?? `Imagen request failed (${response.status})`);
   }
 
-  const part = payload.candidates?.[0]?.content?.parts?.find(
-    (p) => p.inlineData && p.inlineData.data,
-  );
-  const bytes = part?.inlineData?.data;
+  const bytes = payload.predictions?.[0]?.bytesBase64Encoded;
   if (!bytes) {
-    throw new Error("Gemini returned an empty image");
+    throw new Error("Imagen returned an empty image");
   }
-  const mimeType = part?.inlineData?.mimeType ?? "image/png";
-  return `data:${mimeType};base64,${bytes}`;
+  return `data:image/png;base64,${bytes}`;
 }
