@@ -130,13 +130,13 @@ function ErrorList({ errors }: { errors: Errors }) {
     <dl className="errors">
       {errors.story ? (
         <div className="error">
-          <dt>Story · gemini-2.0-flash</dt>
+          <dt>Story · gemini-3.5-flash</dt>
           <dd>{errors.story}</dd>
         </div>
       ) : null}
       {errors.cover ? (
         <div className="error">
-          <dt>Cover · imagen-4.0-generate-001</dt>
+          <dt>Cover · gemini-3.1-flash-image-preview</dt>
           <dd>{errors.cover}</dd>
         </div>
       ) : null}
