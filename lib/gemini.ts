@@ -5,17 +5,13 @@ const GENERATE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 type GeminiResponse = {
   candidates?: Array<{
-    content?: { parts?: Array<{ text?: string }> };
-  }>;
-  error?: { message?: string };
-};
-
-type GeminiImageResponse = {
-  candidates?: Array<{
     content?: {
       parts?: Array<{
         text?: string;
-        inlineData?: { mimeType?: string; data?: string };
+        inlineData?: {
+          mimeType?: string;
+          data?: string;
+        };
       }>;
     };
   }>;
@@ -84,16 +80,18 @@ export async function generateCover(story: string, apiKey: string): Promise<stri
     },
   );
 
-  const payload = (await response.json()) as GeminiImageResponse;
+  const payload = (await response.json()) as GeminiResponse;
   if (!response.ok) {
     throw new Error(payload.error?.message ?? `Gemini request failed (${response.status})`);
   }
 
-  const part = payload.candidates?.[0]?.content?.parts?.find((p) => p.inlineData);
+  const part = payload.candidates?.[0]?.content?.parts?.find(
+    (p) => p.inlineData && p.inlineData.data,
+  );
   const bytes = part?.inlineData?.data;
   if (!bytes) {
     throw new Error("Gemini returned an empty image");
   }
-  const mimeType = part.inlineData?.mimeType ?? "image/png";
+  const mimeType = part?.inlineData?.mimeType ?? "image/png";
   return `data:${mimeType};base64,${bytes}`;
 }
