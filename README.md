@@ -3,8 +3,8 @@
 A one-page Next.js writer: type a prompt, get a title, cover, and short story.
 Words are not tokenized.
 
-`lib/gemini.ts` pins two Google identifiers. Story text uses
-`gemini-3.5-flash`. The cover uses
+`lib/gemini.ts` used to pin two retired Google identifiers. Story text has
+been migrated to `gemini-3.5-flash`, and the cover has been migrated to
 `gemini-3.1-flash-image-preview`.
 
 ## Hosted (stable Cloud Run)
