@@ -5,7 +5,7 @@ Words are not tokenized.
 
 `lib/gemini.ts` pins two active Google identifiers. Story text uses
 `gemini-3.5-flash`. The cover uses
-`gemini-3.1-flash-image-preview`.
+`gemini-3.1-flash-image`.
 
 ## Hosted (stable Cloud Run)
 
