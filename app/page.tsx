@@ -136,7 +136,7 @@ function ErrorList({ errors }: { errors: Errors }) {
       ) : null}
       {errors.cover ? (
         <div className="error">
-          <dt>Cover · gemini-3.1-flash-image-preview</dt>
+          <dt>Cover · gemini-3.1-flash-image</dt>
           <dd>{errors.cover}</dd>
         </div>
       ) : null}
